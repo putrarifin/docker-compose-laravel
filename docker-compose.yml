@@ -1,0 +1,32 @@
+version: "3"
+services:
+    redis:
+        image: redis:5.0.0-alpine
+        restart: always
+        # ports:
+            # - 6379
+    db:
+        image: mysql:5.7.24
+        restart: always
+        command: --default-authentication-plugin=mysql_native_password
+        environment:
+            MYSQL_ROOT_PASSWORD: Bismillah
+            MYSQL_DATABASE: DATABASE
+            MYSQL_USER: user
+            MYSQL_PASSWORD: Bismillah
+        # ports:
+            # - "3308:3306"
+    app:
+        build: src/
+        restart: always
+        container_name: app-laravel
+        depends_on:
+            - db
+            - redis
+        ports:
+            - "8123:80"
+        volumes:
+            - ./src/myapp:/var/www/myapp
+volumes:
+    web-app:
+        driver: local
